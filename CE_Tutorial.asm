@@ -7,14 +7,12 @@ Label_qword:    ;Label（标签）用于指代一个内存地址，当程序被�
 Label_byte db 254   ;Byte   标签简写    内存地址：0x403010+8
 Lable_word dw 0xCC33    ;Word=2Bytes       内存地址：0x403010+8+1
 Lable_dword dd 0xDDDD4444   ;Double Word=4Bytes        内存地址：0x403010+8+1+2
-
+Single_3 dd 3.0 ;Float(float32) dword(Double Word)=4Bytes       内存地址：0x403010+8+1+2+4
+Single_5 dd 5.5 ;Float(float32) dword(Double Word)=4Bytes       内存地址：0x403010+8+1+2+4+4
+Double_6 dq 6.0 ;Double(float64) qword(Quad Word)=8Bytes        内存地址：0x403010+8+1+2+4+4+4
+Double_8 dq 8.0 ;;Double(float64) qword(Quad Word)=8Bytes        内存地址：0x403010+8+1+2+4+4+8
 
 section '.bss'  ;fasm伪代码
-    Single_3 dd 3.0
-    Single_5 dd 5.5
-    Double_6 dq 6.0
-    Double_8 dq 8.0
-
 section '.text' executable
 
 public main ;Symbol(符号) 让main成为一个符号（静态内存地址）
@@ -136,7 +134,7 @@ main:
     
     ;单精度浮点的加减乘除：浮点的数值不能固定在操作码中，必须从一个内存地址中读取
     ;movss xmm0, 1.2    会报错
-    movss xmm3, dword [Single_3]    ;xmm3 3.0 0x40400000
+    movss xmm3, dword [Single_3]    ;xmm3 3.0 0x40400000    用GDB命令 info all-registers 观察
     movss xmm5, dword [Single_5]    ;xmm5 5.5
     addss xmm3, xmm5    ;xmm3 8.5
     subss xmm3, xmm5    ;xmm3 3.0
