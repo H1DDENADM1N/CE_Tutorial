@@ -1,0 +1,95 @@
+{ 游戏   : Tutorial-x86_64 Step 9 AOB INJECT only hurt enemy
+  版本: 
+  日期   : 2024-01-18
+  作者 : FL
+
+  这个脚本做等等等等
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Tutorial-x86_64.exe,F3xxxxxxxx0F2Fxxxxxxxxxx7Axx75xx48xxxxxx48) // 搜索指令字节数组，直到结果唯一
+alloc(newmem,$1000,INJECT)
+
+label(code)
+
+label(team)  //获取标签
+label(enemy)  //获取标签
+label(return)
+
+newmem:
+
+code:
+  //movss [rbx+08],xmm0   原指令
+  pushfq //报错改pushfd  Compare指令会对一部分特殊的寄存器产生影响，因此需要在cmp前push
+{
+在汇编语言中，`push`、`pop`、`pushfq`、`popfq` 和 `pushfd`、`popfd` 指令都是用于操作栈以及处理器标志寄存器的。以下是它们的区别：
+
+1. **push** 和 **pop**
+   - `push`：该指令用于将指定的寄存器（如通用寄存器 AX、BX 等）或立即数压入堆栈（在x86架构中通常为用户模式下的栈指针ESP指向的内存区域）。它会先减小栈指针ESP，然后将数据存储到新的栈顶地址。
+   - `pop`：与`push`相反，它从堆栈顶部取出一个值，并将其放入指定的寄存器中。执行后，栈指针ESP会增加以指向新的栈顶。
+
+2. **pushfd** 和 **popfd**
+   - `pushfd`：这是一个特定于x86架构的指令，用于将处理器的状态标志寄存器（EFLAGS）的内容压入堆栈。状态标志寄存器包含CF（进位标志）、ZF（零标志）、SF（符号标志）等各种条件标志位，它们反映了最近执行的算术或逻辑运算的结果。
+   - `popfd`：这个指令从堆栈中恢复EFLAGS寄存器的值。当你需要保存和恢复程序执行上下文时，这对指令非常有用，例如在中断处理程序或者子程序调用中。
+
+3. **pushfq** 和 **popfq**
+   - `pushfq` 和 `popfq` 是在较新的x86-64架构（AMD64或Intel 64）中对应的指令，用于64位模式下的处理器标志寄存器RFLAGS。它们的功能与`pushfd`和`popfd`类似，只是针对64位环境中的扩展标志寄存器进行操作。
+
+总的来说，这些指令主要用于保存和恢复程序状态，特别是当程序需要暂时切换执行上下文时，比如函数调用、中断处理等场合。通过使用`push`和`pop`可以管理栈上的局部变量和返回地址，而`pushfd/popfd`或`pushfq/popfq`则用于管理和保护重要的处理器状态信息。
+}
+  cmp [rbx+14], 2  //根据 找出该原指令访问的地址，标注分组，扫描共性，区分敌我
+  je enemy  //Jump if Equal
+
+team:
+  nop  //什么都不做
+  jmp return
+
+enemy:
+  movss [rbx+8],xmm0  //保持原指令  保持伤害值
+  //movss [rbx+8],500  会报错，浮点的数值不能固定在操作码中，必须从一个内存地址中读取
+  movss [rbx+8],xmm0
+  popfq //报错改popfd
+  jmp return
+
+
+INJECT:
+  jmp newmem
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db F3 0F 11 43 08
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Tutorial-x86_64.exe+2F25D
+
+Tutorial-x86_64.exe+2F233: E9 97 00 00 00           - jmp Tutorial-x86_64.exe+2F2CF
+Tutorial-x86_64.exe+2F238: F3 0F 2A C6              - cvtsi2ss xmm0,esi
+Tutorial-x86_64.exe+2F23C: F3 0F 10 4B 08           - movss xmm1,[rbx+08]
+Tutorial-x86_64.exe+2F241: F3 0F 5C C8              - subss xmm1,xmm0
+Tutorial-x86_64.exe+2F245: 0F 2F 0D 8C 87 20 00     - comiss xmm1,[Tutorial-x86_64.exe+2379D8]
+Tutorial-x86_64.exe+2F24C: 7A 0C                    - jp Tutorial-x86_64.exe+2F25A
+Tutorial-x86_64.exe+2F24E: 73 0A                    - jae Tutorial-x86_64.exe+2F25A
+Tutorial-x86_64.exe+2F250: F3 0F 10 05 80 87 20 00  - movss xmm0,[Tutorial-x86_64.exe+2379D8]
+Tutorial-x86_64.exe+2F258: EB 03                    - jmp Tutorial-x86_64.exe+2F25D
+Tutorial-x86_64.exe+2F25A: 0F 28 C1                 - movaps xmm0,xmm1
+// ---------- INJECTING HERE ----------
+Tutorial-x86_64.exe+2F25D: F3 0F 11 43 08           - movss [rbx+08],xmm0
+// ---------- DONE INJECTING  ----------
+Tutorial-x86_64.exe+2F262: 0F 2F 05 6F 87 20 00     - comiss xmm0,[Tutorial-x86_64.exe+2379D8]
+Tutorial-x86_64.exe+2F269: 7A 14                    - jp Tutorial-x86_64.exe+2F27F
+Tutorial-x86_64.exe+2F26B: 75 12                    - jne Tutorial-x86_64.exe+2F27F
+Tutorial-x86_64.exe+2F26D: 48 8B 4B 60              - mov rcx,[rbx+60]
+Tutorial-x86_64.exe+2F271: 48 8B 15 C0 B9 18 00     - mov rdx,[Tutorial-x86_64.exe+1BAC38]
+Tutorial-x86_64.exe+2F278: E8 E3 D7 07 00           - call Tutorial-x86_64.exe+ACA60
+Tutorial-x86_64.exe+2F27D: EB 42                    - jmp Tutorial-x86_64.exe+2F2C1
+Tutorial-x86_64.exe+2F27F: F3 0F 10 4B 08           - movss xmm1,[rbx+08]
+Tutorial-x86_64.exe+2F284: 48 8D 4D E0              - lea rcx,[rbp-20]
+Tutorial-x86_64.exe+2F288: E8 63 BD 01 00           - call Tutorial-x86_64.exe+4AFF0
+}
