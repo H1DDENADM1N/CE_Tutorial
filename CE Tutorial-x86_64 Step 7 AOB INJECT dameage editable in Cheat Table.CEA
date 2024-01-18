@@ -1,0 +1,75 @@
+{ 游戏   : Tutorial-x86_64 Step 7 AOB INJECT dameage editable in Cheat Table
+  版本: 
+  日期   : 2024-01-18
+  作者 : FL
+
+  这个脚本做等等等等
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Tutorial-x86_64.exe,83xxxxxxxxxxxx48xxxxxxE8xxxxxxxx8Bxxxxxxxxxx41) // 搜索指令字节数组，直到结果唯一
+alloc(newmem,$1000,INJECT)
+
+label(code)
+label(return)
+
+label(damage)  //获取标签
+registerSymbol(damage)  //把注册成全局符号
+
+newmem:
+
+code:
+  //sub dword ptr [rsi+000007E0],01  原指令
+  //add dword ptr [rsi+000007E0],01  通关条件
+
+  //把脚本中用到的数值放在内存里
+  // add dword ptr [rsi+000007E0],[damage]  错误，一条指令里面最多有一次访存
+  mov rcx, [damage]  //rcx寄存器在之后被覆盖过，所以现在随便修改其内容没关系，把rcx作为中转寄存器
+  add dword ptr [rsi+000007E0],rcx
+  jmp return
+
+damage:  //把数据放在最后，避免游戏把这些数据当成指令去执行
+  dd (int)0  //dd给数据分配空间  int数据类型是是整数  数值0
+
+INJECT:
+  jmp newmem
+  nop 2
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db 83 AE E0 07 00 00 01
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Tutorial-x86_64.exe+2DB57
+
+Tutorial-x86_64.exe+2DB20: 55                                - push rbp
+Tutorial-x86_64.exe+2DB21: 48 89 E5                          - mov rbp,rsp
+Tutorial-x86_64.exe+2DB24: 48 8D A4 24 C0 FD FF FF           - lea rsp,[rsp-00000240]
+Tutorial-x86_64.exe+2DB2C: 48 89 9D E0 FD FF FF              - mov [rbp-00000220],rbx
+Tutorial-x86_64.exe+2DB33: 48 89 B5 E8 FD FF FF              - mov [rbp-00000218],rsi
+Tutorial-x86_64.exe+2DB3A: 48 89 CE                          - mov rsi,rcx
+Tutorial-x86_64.exe+2DB3D: 48 C7 85 F0 FE FF FF 00 00 00 00  - mov qword ptr [rbp-00000110],00000000
+Tutorial-x86_64.exe+2DB48: 48 C7 45 F8 00 00 00 00           - mov qword ptr [rbp-08],00000000
+Tutorial-x86_64.exe+2DB50: 90                                - nop 
+Tutorial-x86_64.exe+2DB51: 8B 9E E0 07 00 00                 - mov ebx,[rsi+000007E0]
+// ---------- INJECTING HERE ----------
+Tutorial-x86_64.exe+2DB57: 83 AE E0 07 00 00 01              - sub dword ptr [rsi+000007E0],01
+// ---------- DONE INJECTING  ----------
+Tutorial-x86_64.exe+2DB5E: 48 8D 4D F8                       - lea rcx,[rbp-08]
+Tutorial-x86_64.exe+2DB62: E8 A9 B3 FD FF                    - call Tutorial-x86_64.exe+8F10
+Tutorial-x86_64.exe+2DB67: 8B 8E E0 07 00 00                 - mov ecx,[rsi+000007E0]
+Tutorial-x86_64.exe+2DB6D: 41 B9 FF 00 00 00                 - mov r9d,000000FF
+Tutorial-x86_64.exe+2DB73: 4C 8D 85 F8 FE FF FF              - lea r8,[rbp-00000108]
+Tutorial-x86_64.exe+2DB7A: 48 C7 C2 FF FF FF FF              - mov rdx,FFFFFFFFFFFFFFFF
+Tutorial-x86_64.exe+2DB81: 48 63 C9                          - movsxd  rcx,ecx
+Tutorial-x86_64.exe+2DB84: E8 07 85 FD FF                    - call Tutorial-x86_64.exe+6090
+Tutorial-x86_64.exe+2DB89: 45 31 C0                          - xor r8d,r8d
+Tutorial-x86_64.exe+2DB8C: 48 8D 95 F8 FE FF FF              - lea rdx,[rbp-00000108]
+}
