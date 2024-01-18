@@ -13,7 +13,7 @@ section '.bss'  ;fasm伪代码
     Single_3 dd 3.0
     Single_5 dd 5.5
     Double_6 dq 6.0
-    Double_8 dq 8.8
+    Double_8 dq 8.0
 
 section '.text' executable
 
