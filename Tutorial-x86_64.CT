@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="45">
+  <Forms>
+    <UDF1 Class="TCEForm" Encoding="Ascii85">D]Q_[2nldAU:MM2b.}cxWeIh0Gi32eO*Fu3!?{l}nwg$a!n{-$IV8V.+?uxeJTs+vgZT^.yK]beNoIZ=8)2N7bAC;K5sQk73Ims0eqM/ln9t6hoD-grS)3]-/LncbT2u@D(u+k:q-UmQz]y[i</UDF1>
+  </Forms>
+  <CheatEntries>
+    <CheatEntry>
+      <ID>1</ID>
+      <Description>"Step 2 Health 1000"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"Tutorial-x86_64.exe"+00325A70</Address>
+      <Offsets>
+        <Offset>7F8</Offset>
+        <Offset>18</Offset>
+        <Offset>18</Offset>
+        <Offset>F8</Offset>
+        <Offset>28</Offset>
+        <Offset>D0</Offset>
+        <Offset>7D0</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"Step 3 5000"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"Tutorial-x86_64.exe"+00325A80</Address>
+      <Offsets>
+        <Offset>7F8</Offset>
+        <Offset>50</Offset>
+        <Offset>5D0</Offset>
+        <Offset>18</Offset>
+        <Offset>F8</Offset>
+        <Offset>28</Offset>
+        <Offset>D0</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>6</ID>
+      <Description>"Step 4 Health 5000"</Description>
+      <VariableType>Float</VariableType>
+      <Address>"Tutorial-x86_64.exe"+00325A80</Address>
+      <Offsets>
+        <Offset>818</Offset>
+        <Offset>40</Offset>
+        <Offset>8</Offset>
+        <Offset>30</Offset>
+        <Offset>18</Offset>
+        <Offset>F8</Offset>
+        <Offset>3F0</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"Step 4 Ammo 5000"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Double</VariableType>
+      <Address>"Tutorial-x86_64.exe"+00325AA0</Address>
+      <Offsets>
+        <Offset>820</Offset>
+        <Offset>6F8</Offset>
+        <Offset>18</Offset>
+        <Offset>F8</Offset>
+        <Offset>28</Offset>
+        <Offset>D0</Offset>
+        <Offset>3F0</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>10</ID>
+      <Description>"Step 5 skip change value"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ 游戏   : Tutorial-x86_64 Step 5 AOB INJECT skip change value
+  版本: 
+  日期   : 2024-01-19
+  作者 : FL
+
+  这个脚本做等等等等
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Tutorial-x86_64.exe,89xx48xxxxxx48xxxxxxxxxxxx8Bxx3Bxxxx74) // should be unique
+alloc(newmem,$1000,INJECT)
+
+label(code)
+label(return)
+
+newmem:
+
+code:
+  //mov [rax],edx  原指令 跳过
+  mov rax,[rbp-10]
+  jmp return
+
+INJECT:
+  jmp newmem
+  nop
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db 89 10 48 8B 45 F0
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Tutorial-x86_64.exe+2CB88
+
+Tutorial-x86_64.exe+2CB65: 49 89 E8              - mov r8,rbp
+Tutorial-x86_64.exe+2CB68: E8 43 8E FE FF        - call Tutorial-x86_64.exe+159B0
+Tutorial-x86_64.exe+2CB6D: 0F 1F 00              - nop dword ptr [rax]
+Tutorial-x86_64.exe+2CB70: 8B 45 E8              - mov eax,[rbp-18]
+Tutorial-x86_64.exe+2CB73: 3B 45 EC              - cmp eax,[rbp-14]
+Tutorial-x86_64.exe+2CB76: 74 B0                 - je Tutorial-x86_64.exe+2CB28
+Tutorial-x86_64.exe+2CB78: EB 00                 - jmp Tutorial-x86_64.exe+2CB7A
+Tutorial-x86_64.exe+2CB7A: 48 8B 45 F0           - mov rax,[rbp-10]
+Tutorial-x86_64.exe+2CB7E: 48 8B 80 E0 07 00 00  - mov rax,[rax+000007E0]
+Tutorial-x86_64.exe+2CB85: 8B 55 E8              - mov edx,[rbp-18]
+// ---------- INJECTING HERE ----------
+Tutorial-x86_64.exe+2CB88: 89 10                 - mov [rax],edx
+// ---------- DONE INJECTING  ----------
+Tutorial-x86_64.exe+2CB8A: 48 8B 45 F0           - mov rax,[rbp-10]
+Tutorial-x86_64.exe+2CB8E: 48 8B 80 E0 07 00 00  - mov rax,[rax+000007E0]
+Tutorial-x86_64.exe+2CB95: 8B 00                 - mov eax,[rax]
+Tutorial-x86_64.exe+2CB97: 3B 45 EC              - cmp eax,[rbp-14]
+Tutorial-x86_64.exe+2CB9A: 74 02                 - je Tutorial-x86_64.exe+2CB9E
+Tutorial-x86_64.exe+2CB9C: EB 22                 - jmp Tutorial-x86_64.exe+2CBC0
+Tutorial-x86_64.exe+2CB9E: 48 8B 45 F0           - mov rax,[rbp-10]
+Tutorial-x86_64.exe+2CBA2: 48 8B 88 C0 07 00 00  - mov rcx,[rax+000007C0]
+Tutorial-x86_64.exe+2CBA9: B2 01                 - mov dl,01
+Tutorial-x86_64.exe+2CBAB: 48 8B 45 F0           - mov rax,[rbp-10]
+}
+</AssemblerScript>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>13</ID>
+      <Description>"Step 6 force value 5000"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"Tutorial-x86_64.exe"+00325AD0</Address>
+      <Offsets>
+        <Offset>0</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>15</ID>
+      <Description>"Step 7 damage +2"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ 游戏   : Tutorial-x86_64
+  版本: 
+  日期   : 2024-01-19
+  作者 : FL
+
+  这个脚本做等等等等
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Tutorial-x86_64.exe,83 AE E0 07 00 00 01) // should be unique
+alloc(newmem,$1000,INJECT)
+
+label(code)
+label(return)
+
+label(damage)  //获取标签
+registerSymbol(damage)  //把注册成全局符号
+
+newmem:
+
+code:
+  //sub dword ptr [rsi+000007E0],01   原指令
+  mov rcx, [damage]
+  add dword ptr [rsi+000007E0],rcx
+  jmp return
+
+damage:  //把数据放在最后，避免游戏把这些数据当成指令去执行
+  dd (int)0  //dd给数据分配空间  int数据类型是是整数  数值0
+
+INJECT:
+  jmp newmem
+  nop 2
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db 83 AE E0 07 00 00 01
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Tutorial-x86_64.exe+2DB57
+
+Tutorial-x86_64.exe+2DB20: 55                                - push rbp
+Tutorial-x86_64.exe+2DB21: 48 89 E5                          - mov rbp,rsp
+Tutorial-x86_64.exe+2DB24: 48 8D A4 24 C0 FD FF FF           - lea rsp,[rsp-00000240]
+Tutorial-x86_64.exe+2DB2C: 48 89 9D E0 FD FF FF              - mov [rbp-00000220],rbx
+Tutorial-x86_64.exe+2DB33: 48 89 B5 E8 FD FF FF              - mov [rbp-00000218],rsi
+Tutorial-x86_64.exe+2DB3A: 48 89 CE                          - mov rsi,rcx
+Tutorial-x86_64.exe+2DB3D: 48 C7 85 F0 FE FF FF 00 00 00 00  - mov qword ptr [rbp-00000110],00000000
+Tutorial-x86_64.exe+2DB48: 48 C7 45 F8 00 00 00 00           - mov qword ptr [rbp-08],00000000
+Tutorial-x86_64.exe+2DB50: 90                                - nop 
+Tutorial-x86_64.exe+2DB51: 8B 9E E0 07 00 00                 - mov ebx,[rsi+000007E0]
+// ---------- INJECTING HERE ----------
+Tutorial-x86_64.exe+2DB57: 83 AE E0 07 00 00 01              - sub dword ptr [rsi+000007E0],01
+// ---------- DONE INJECTING  ----------
+Tutorial-x86_64.exe+2DB5E: 48 8D 4D F8                       - lea rcx,[rbp-08]
+Tutorial-x86_64.exe+2DB62: E8 A9 B3 FD FF                    - call Tutorial-x86_64.exe+8F10
+Tutorial-x86_64.exe+2DB67: 8B 8E E0 07 00 00                 - mov ecx,[rsi+000007E0]
+Tutorial-x86_64.exe+2DB6D: 41 B9 FF 00 00 00                 - mov r9d,000000FF
+Tutorial-x86_64.exe+2DB73: 4C 8D 85 F8 FE FF FF              - lea r8,[rbp-00000108]
+Tutorial-x86_64.exe+2DB7A: 48 C7 C2 FF FF FF FF              - mov rdx,FFFFFFFFFFFFFFFF
+Tutorial-x86_64.exe+2DB81: 48 63 C9                          - movsxd  rcx,ecx
+Tutorial-x86_64.exe+2DB84: E8 07 85 FD FF                    - call Tutorial-x86_64.exe+6090
+Tutorial-x86_64.exe+2DB89: 45 31 C0                          - xor r8d,r8d
+Tutorial-x86_64.exe+2DB8C: 48 8D 95 F8 FE FF FF              - lea rdx,[rbp-00000108]
+}
+</AssemblerScript>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>16</ID>
+          <Description>"damage 2"</Description>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>4 Bytes</VariableType>
+          <Address>damage</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>19</ID>
+      <Description>"Step 8 5000"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>"Tutorial-x86_64.exe"+00325B00</Address>
+      <Offsets>
+        <Offset>18</Offset>
+        <Offset>0</Offset>
+        <Offset>18</Offset>
+        <Offset>10</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"Step 9 only hurt enemy"</Description>
+      <VariableType>Auto Assembler Script</VariableType>
+      <AssemblerScript>{ 游戏   : Tutorial-x86_64 Step 9 AOB INJECT only hurt enemy
+  版本: 
+  日期   : 2024-01-19
+  作者 : FL
+
+  这个脚本做等等等等
+}
+
+[ENABLE]
+
+aobscanmodule(INJECT,Tutorial-x86_64.exe,F3xxxxxxxx0F2Fxxxxxxxxxx7Axx75xx48xxxxxx48) // should be unique
+alloc(newmem,$1000,INJECT)
+
+label(code)
+
+label(team)  //获取标签
+label(enemy)  //获取标签
+
+label(return)
+
+newmem:
+
+code:
+  //movss [rbx+08],xmm0   原指令
+  pushfq
+  cmp [rbx+14], 2
+  je enemy
+
+team:
+  jmp return  //不伤害直接返回
+
+enemy:
+  movss [rbx+8],xmm0  //保持原指令  保持伤害值
+  popfq
+  jmp return
+
+INJECT:
+  jmp newmem
+return:
+registersymbol(INJECT)
+
+[DISABLE]
+
+INJECT:
+  db F3 0F 11 43 08
+
+unregistersymbol(INJECT)
+dealloc(newmem)
+
+{
+// ORIGINAL CODE - INJECTION POINT: Tutorial-x86_64.exe+2F25D
+
+Tutorial-x86_64.exe+2F233: E9 97 00 00 00           - jmp Tutorial-x86_64.exe+2F2CF
+Tutorial-x86_64.exe+2F238: F3 0F 2A C6              - cvtsi2ss xmm0,esi
+Tutorial-x86_64.exe+2F23C: F3 0F 10 4B 08           - movss xmm1,[rbx+08]
+Tutorial-x86_64.exe+2F241: F3 0F 5C C8              - subss xmm1,xmm0
+Tutorial-x86_64.exe+2F245: 0F 2F 0D 8C 87 20 00     - comiss xmm1,[Tutorial-x86_64.exe+2379D8]
+Tutorial-x86_64.exe+2F24C: 7A 0C                    - jp Tutorial-x86_64.exe+2F25A
+Tutorial-x86_64.exe+2F24E: 73 0A                    - jae Tutorial-x86_64.exe+2F25A
+Tutorial-x86_64.exe+2F250: F3 0F 10 05 80 87 20 00  - movss xmm0,[Tutorial-x86_64.exe+2379D8]
+Tutorial-x86_64.exe+2F258: EB 03                    - jmp Tutorial-x86_64.exe+2F25D
+Tutorial-x86_64.exe+2F25A: 0F 28 C1                 - movaps xmm0,xmm1
+// ---------- INJECTING HERE ----------
+Tutorial-x86_64.exe+2F25D: F3 0F 11 43 08           - movss [rbx+08],xmm0
+// ---------- DONE INJECTING  ----------
+Tutorial-x86_64.exe+2F262: 0F 2F 05 6F 87 20 00     - comiss xmm0,[Tutorial-x86_64.exe+2379D8]
+Tutorial-x86_64.exe+2F269: 7A 14                    - jp Tutorial-x86_64.exe+2F27F
+Tutorial-x86_64.exe+2F26B: 75 12                    - jne Tutorial-x86_64.exe+2F27F
+Tutorial-x86_64.exe+2F26D: 48 8B 4B 60              - mov rcx,[rbx+60]
+Tutorial-x86_64.exe+2F271: 48 8B 15 C0 B9 18 00     - mov rdx,[Tutorial-x86_64.exe+1BAC38]
+Tutorial-x86_64.exe+2F278: E8 E3 D7 07 00           - call Tutorial-x86_64.exe+ACA60
+Tutorial-x86_64.exe+2F27D: EB 42                    - jmp Tutorial-x86_64.exe+2F2C1
+Tutorial-x86_64.exe+2F27F: F3 0F 10 4B 08           - movss xmm1,[rbx+08]
+Tutorial-x86_64.exe+2F284: 48 8D 4D E0              - lea rcx,[rbp-20]
+Tutorial-x86_64.exe+2F288: E8 63 BD 01 00           - call Tutorial-x86_64.exe+4AFF0
+}
+</AssemblerScript>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+  <Comments>有关此表的信息:
+</Comments>
+</CheatTable>
