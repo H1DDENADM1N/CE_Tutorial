@@ -21,7 +21,7 @@ newmem:
 
 code:
   //sub dword ptr [rsi+000007E0],01  原指令
-  //add dword ptr [rsi+000007E0],01  通关条件
+  //add dword ptr [rsi+000007E0],02  通关条件
 
   //把脚本中用到的数值放在内存里
   // add dword ptr [rsi+000007E0],[damage]  错误，一条指令里面最多有一次访存
